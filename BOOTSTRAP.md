@@ -3,6 +3,7 @@
 ## Frontend
 
 ### NextJS
+*This content is copy/learn from the Ebook: React Application Architecture for Production by Adam Giese*
 
 ```sh
 npx create-next-app@latest uz-app --typescript
@@ -131,3 +132,79 @@ To run Prettier, we have defined a couple of scripts in `package.json`:
 ```
 
 As we can see, we can run `npm run format:check` to just check the formatting without trying to fix it. If we want to fix it, then we can run `npm run format:fix`, which will modify the files that need to be fixed.
+
+### Pre-commiting
+Having static code analysis tools such as TypeScript, ESLint, and Prettier is great; we have configured them and can run individual scripts whenever we make some changes to ensure everything is in the best order.
+
+However, there are some drawbacks. Developers can forget to run all checks before committing to the repo, which can still bring problematic and inconsistent code to production.
+
+Fortunately, there is a solution that can fix this problem: whenever we try to commit to the repository, we want to run all checks in an automated way.
+
+Whenever we attempt to commit to the repository, the git pre-commit hook will run and execute the scripts that will do the checking. If all the checks pass, the changes will be committed to the repository; otherwise, we will have to fix the issues and try again.
+
+To enable this flow, we will use `husky` and `lint-staged`:
+
+`husky` is a tool that allows us to run git hooks. We want to run the pre-commit hook to run the checks before committing our changes.
+
+`lint-staged` is a tool that allows us to run those checks only on files that are in the staging area of Git. This improves the speed of code checking since doing that on the entire code base might be too slow.
+
+We already have these tools installed and configured, but if we didn’t, they could be installed using the following command:
+
+
+```sh
+npm install –-save-dev husky lint-staged
+```
+Then, we would need to enable Git hooks:
+
+
+```sh
+npx husky install
+```
+Then, we would need to create the pre-commit hook:
+
+
+```sh
+npx husky add .husky/pre-commit "npx lint-staged"
+```
+
+The Husky pre-commit hook will run lint-staged. Then, we would need to define what commands lint-staged should run inside the lint-staged.config.js file:
+
+
+```js
+module.exports = {
+  '*.{ts,tsx}': [
+    'npm run lint',
+    "bash -c 'npm run types:check'",
+    'npm run format:check',
+  ],
+};
+```
+If we try to commit code that contains any violations, it will fail and stop us from committing the changes.
+
+⚠️ Run `husky` for the nested folder
+- see the tip [here](https://stackoverflow.com/questions/53869155/how-to-run-husky-pre-commit-in-child-directory-only) or more detail at [here](https://scottsauber.com/2021/06/01/using-husky-git-hooks-and-lint-staged-with-nested-folders/)
+
+**Use case**
+my frontend folder: `/frontend/uz-app`
+
+```json
+# at /frontend/uz-app/package.json
+{
+  "scripts": {
+      // other scripts omitted 
+      "prepare": "(cd ../../ && husky install ./frontend/uz-app/.husky && touch ./frontend/uz-app/.husky/pre-commit)"
+   }
+}
+```
+
+At the `./husky/pre-commit` file, add the following content:
+```sh
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+cd ./frontend/uz-app && npx lint-staged 
+```
+
+Then add the permission
+```sh
+chmod +x .husky/pre-commit
+```
