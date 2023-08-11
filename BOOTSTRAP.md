@@ -370,3 +370,187 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ```
 
 For the nextjs we need to have a look on [the particular document](https://chakra-ui.com/getting-started/nextjs-guide) too.
+
+### Story Book
+Storybook is a tool that allows us to develop and test UI components in isolation. We can think of it as a tool for making catalogs of all the components we have. It is great for documenting components. A couple of benefits of using Storybook include the following:
+
+Storybook allows developing components in isolation without the need to reproduce the exact state of the application, allowing developers to focus on the things they are building
+
+Storybook serves as a catalog of UI components allowing all stakeholders to try out the components without using them in the application
+Storybook is configured by using the following command:
+
+```sh
+npx storybook init
+```
+This command will install all required dependencies and set up the configuration that resides in the .storybook folder at the root of the project.
+
+#### Storybook Configuration
+We already have Storybook installed, so let’s look at the configuration, which has two files.
+
+The first file contains the main configuration, which controls how the Storybook server behaves and how it processes our stories. It lives in `.storybook/main.js`:
+
+
+```js
+const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+module.exports = {
+  stories: ['../src/**/*.stories.tsx'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@chakra-ui/storybook-addon',
+  ],
+  features: {
+    emotionAlias: false,
+  },
+  framework: '@storybook/react',
+  core: {
+    builder: '@storybook/builder-webpack5',
+  },
+  webpackFinal: async (config) => {
+    config.resolve.plugins = config.resolve.plugins || [];
+    config.resolve.plugins.push(
+      new TsconfigPathsPlugin({
+        configFile: path.resolve(
+          __dirname,
+          '../tsconfig.json'
+        ),
+      })
+    );
+    return config;
+  },
+};
+```
+The main configuration contains the following properties:
+
+- `stories`: An array of globs that indicates the locations of our stories.
+- `addons`: A list of add-ons used to enhance the default behavior of Storybook.
+- `features`: Enables Storybook’s additional features.
+- `framework`: Framework-specific configurations.
+- `core`: Internal feature configuration.
+- `webpackFinal`: Configuration for extending default webpack configuration. We are enabling absolute imports by telling Storybook to use paths from the tsconfig.json file.
+
+The second configuration file controls how the stories are rendered in the UI. This configuration lives in `.storybook/preview.js`:
+
+
+```js
+import { theme } from '../src/config/theme';
+export const parameters = {
+  actions: { argTypesRegex: '^on[A-Z].*' },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+  controls: { expanded: true },
+  chakra: {
+    theme,
+  },
+};
+```
+Notice how we are passing the theme to the chakra property in parameters. This will enable Chakra theming to be applied to our components in Storybook.
+
+We can optionally export decorators, which will wrap all the stories. It is useful if the components rely on some providers that we want to have available in all stories.
+
+#### Storybook scripts
+Our Storybook setup has two npm scripts:
+
+*Running Storybook in development*
+To start the development server, we can execute the following command:
+
+
+`npm run storybook`
+The command will open Storybook at http://localhost:6006/.
+
+Building Storybook for production
+We can also generate and deploy the stories to be visible without running the development server. To build the stories, we can execute the following command:
+
+
+`npm run storybook:build`
+Generated files can then be found in the storybook-static folder, and they can be deployed anywhere.
+
+Now that we have familiarized ourselves with the setup, it’s time to write the stories for the components.
+
+#### Documenting components
+If we recall from the previous section, the configuration in .storybook/main.js has the stories property as follows:
+
+
+`stories: ['../src/**/*.stories.tsx']`
+This means that any file in the src folder that ends with .stories.tsx should be picked by Storybook and treated as a story. With that said, we will co-locate stories next to the components, so the structure for every component will look something like this:
+
+
+```
+components
+  my-component
+    my-component.stories.tsx
+    my-component.tsx
+    index.ts
+```
+We will create our stories based on Component Story Format (CSF), an open standard for writing component examples.
+
+But first, what is a story? According to the CSF standard, a story should represent a single source of truth for a component. We can think of a story as a user story where a component is presented in the corresponding state.
+
+CSF requires the following:
+
+Default exports should define metadata about a component, including the component itself, the component’s name, decorators, and parameters
+Named exports should define all stories
+Let’s now create the stories for the components.
+#### Button stories
+To create stories for the Button component, we need to create an src/components/button/button.stories.tsx file.
+
+Then, we can start by adding the required imports:
+
+
+```js
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Meta, Story } from '@storybook/react';
+import { Button, ButtonProps } from './button';
+```
+Then, we create the meta configuration object:
+
+
+```js
+const meta: Meta = {
+  title: 'Components/Button',
+  component: Button,
+};
+export default meta;
+```
+Notice that we are exporting it as a default export. This is what Storybook requires, according to CSF.
+
+Since we can have multiple stories, we must create a story template:
+
+
+```js
+const Template: Story<ButtonProps> = (props) => (
+  <Button {...props} />
+);
+```
+And then we can export the first story:
+
+
+```js
+export const Default = Template.bind({});
+Default.args = {
+  children: 'Click Me',
+};
+```
+We can pass any props we need to the args object attached to the story, which will be reflected in our stories in Storybook.
+
+We can do the same thing for another story where we want to have a version of Button that has an icon:
+
+```js
+export const WithIcon = Template.bind({});
+WithIcon.args = {
+  children: 'Click Me',
+  icon: <PlusSquareIcon />,
+};
+```
+To see the story, let’s execute the following command:
+
+
+```sh
+npm run storybook
+```

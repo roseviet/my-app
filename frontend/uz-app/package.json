@@ -17,9 +17,12 @@
     "format:check": "npm run prettier -- --check",
     "format:fix": "npm run prettier -- --write",
     "lint-staged": "lint-staged",
-    "prepare": "(cd ../../ && husky install ./frontend/uz-app/.husky && touch ./frontend/uz-app/.husky/pre-commit)"
+    "prepare": "(cd ../../ && husky install ./frontend/uz-app/.husky && touch ./frontend/uz-app/.husky/pre-commit)",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
@@ -37,8 +40,18 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.2.2",
+    "@storybook/addon-interactions": "^7.2.2",
+    "@storybook/addon-links": "^7.2.2",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.2.2",
+    "@storybook/nextjs": "^7.2.2",
+    "@storybook/react": "^7.2.2",
+    "@storybook/testing-library": "^0.2.0",
+    "eslint-plugin-storybook": "^0.6.13",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "storybook": "^7.2.2"
   }
 }
