@@ -554,3 +554,47 @@ To see the story, let’s execute the following command:
 ```sh
 npm run storybook
 ```
+
+## Error & By pass
+### FRONTEND
+1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.
+
+Resolve: default use `next lint`, we should use `eslint` instead
+
+2. **Issue**: `npm run lint` error for storybook render files
+```
+(node:92683) ExperimentalWarning: The ESM module loader is experimental.
+internal/modules/run_main.js:54
+    internalBinding('errors').triggerUncaughtException(
+                              ^
+
+Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only file and data URLs are supported by the default ESM loader
+    at Loader.defaultResolve [as _resolve] (internal/modules/esm/resolve.js:727:11)
+    at Loader.resolve (internal/modules/esm/loader.js:97:40)
+    at Loader.getModuleJob (internal/modules/esm/loader.js:243:28)
+    at ModuleWrap.<anonymous> (internal/modules/esm/module_job.js:46:40)
+    at link (internal/modules/esm/module_job.js:45:36) {
+  code: 'ERR_UNSUPPORTED_ESM_URL_SCHEME'
+```
+Resolve: Add the ignore pattern to the `.eslintignore` file
+
+3. **Issue**: We would like reformat only the changed files.
+So we would like to run the command as below:
+```sh
+npx prettier --write $(git diff --name-only --diff-filter d | grep  -E "\.js|\.ts" | xargs) 
+```
+But we got the error:
+```
+[error] No files matching the pattern were found: "frontend/uz-app/package.json".
+[error] No files matching the pattern were found: "frontend/uz-app/src/providers/app.tsx".
+```
+
+Resolve: The reason is that the `git diff` command need to return the relative path, so we need to add the `--relative` option to the `git diff` command:
+```sh
+prettier --write $(git diff --name-only --relative --diff-filter d | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
+```
+
+
+
+
+

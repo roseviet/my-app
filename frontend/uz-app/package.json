@@ -16,6 +16,7 @@
     "prettier": "prettier \"**/*.+(json|ts|tsx)\"",
     "format:check": "npm run prettier -- --check",
     "format:fix": "npm run prettier -- --write",
+    "format-staged:fix": "prettier --write $(git diff --name-only --relative --diff-filter d | grep  -E \"\\.js|\\.ts|\\.css|\\.scss|\\.sass\" | xargs)",
     "lint-staged": "lint-staged",
     "prepare": "(cd ../../ && husky install ./frontend/uz-app/.husky && touch ./frontend/uz-app/.husky/pre-commit)",
     "storybook": "storybook dev -p 6006",
