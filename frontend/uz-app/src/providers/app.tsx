@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, GlobalStyle } from "@chakra-ui/react";
 
