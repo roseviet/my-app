@@ -1,4 +1,4 @@
-import { Entity } from '@/types';
+import { Entity } from "@/types";
 
 export type AuthUser = Entity & {
   email: string;

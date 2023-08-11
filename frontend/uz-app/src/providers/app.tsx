@@ -1,15 +1,11 @@
-'use client'
+"use client";
 
-import { CacheProvider } from '@chakra-ui/next-js'
-import { ChakraProvider, GlobalStyle } from '@chakra-ui/react'
+import { CacheProvider } from "@chakra-ui/next-js";
+import { ChakraProvider, GlobalStyle } from "@chakra-ui/react";
 
-import { theme } from '@/config/theme';
+import { theme } from "@/config/theme";
 
-export function Providers({ 
-    children
-  }: { 
-  children: React.ReactNode;
-  }) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <CacheProvider>
       <ChakraProvider theme={theme}>
@@ -17,5 +13,5 @@ export function Providers({
         {children}
       </ChakraProvider>
     </CacheProvider>
-  )
+  );
 }
