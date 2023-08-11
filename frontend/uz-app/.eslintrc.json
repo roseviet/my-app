@@ -1,7 +1,7 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-stricted-imports": [
+    "no-restricted-imports": [
       "error",
       {
         "patterns": ["@/features/*/*'"]

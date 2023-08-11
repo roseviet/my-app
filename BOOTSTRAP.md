@@ -240,7 +240,10 @@ Then add the permission
 chmod +x .husky/pre-commit
 ```
 
-### Nestjs Folder Structure
+### Nestjs Folder Structure (Before V13)
+
+**NOTE** This is structure for the Nextjs [Page Layout](https://nextjs.org/docs/pages/building-your-application/routing/pages-and-layouts)
+
 
 <p align="center">
   <kbd>
@@ -351,3 +354,19 @@ The `no-restricted-imports` rule will add constraints to imports from other feat
 Things from a feature can only be consumed if they’re exported from the index.ts file of that feature. This will force us to explicitly make something in a feature publicly available.
 
 If we decide to use features this way, we should also include the `import/no-cycle` rule to prevent cyclic dependencies where Feature A imports things from Feature B and vice versa. If this happens, that means something with the application design is wrong and it needs to be restructured.
+
+### Nestjs Folder Structure (After V13)
+
+From Nextjs v13, they provide the `app router`, see more detail [here](https://nextjs.org/docs/app/building-your-application/routing#the-app-router). Basically, we use `app` folder for routing instead of the `pages` folder.
+
+We have to look the  [Project Organization and File Colocation](https://nextjs.org/docs/app/building-your-application/routing/colocation)
+
+
+### Setup the Charka UI
+From the [documentation](https://chakra-ui.com/getting-started), we can see that we need to install the following dependencies:
+
+```sh
+npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+```
+
+For the nextjs we need to have a look on [the particular document](https://chakra-ui.com/getting-started/nextjs-guide) too.
