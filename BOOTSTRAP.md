@@ -581,7 +581,7 @@ Resolve: Add the ignore pattern to the `.eslintignore` file
 3. **Issue**: We would like reformat only the changed files.
 So we would like to run the command as below:
 ```sh
-npx prettier --write $(git diff --name-only --diff-filter d | grep  -E "\.js|\.ts" | xargs) 
+npx prettier --write $(git diff --staged --name-only --diff-filter d | grep  -E "\.js|\.ts" | xargs) 
 ```
 But we got the error:
 ```
@@ -591,8 +591,11 @@ But we got the error:
 
 Resolve: The reason is that the `git diff` command need to return the relative path, so we need to add the `--relative` option to the `git diff` command:
 ```sh
-prettier --write $(git diff --name-only --relative --diff-filter d | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
+prettier --write $(git diff --staged --name-only --relative --diff-filter d | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
 ```
+
+4. **ISSUE**: Tsconfig is not property?
+Resolve: `npx tsc --traceResolution` to see the error 
 
 
 

@@ -14,7 +14,7 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
         {children}
       </Box>
       <Box py="8" textAlign="center">
-        Powered by <Link href="/">Jobs App</Link>
+        Powered by <Link href="/">UZ APP</Link>
       </Box>
     </Box>
   );
