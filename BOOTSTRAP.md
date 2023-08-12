@@ -1,24 +1,37 @@
 # How I setup the project
 
 Table of Content
+<!-- toc -->
 
-[Frontend](#frontend)  
-1. [NextJS](#nextjs)  
-    1.1 [Install Nextjs](#install-nextjs)  
-    1.2 [Nestjs Folder Structure (Before V)](#nestjs-folder-structure-before-v)  
-    1.3 [Nestjs Folder Structure (After V)](#nestjs-folder-structure-after-v)  
-    1.4 [Setup the Charka UI](#setup-the-charka-ui)  
-2. [Strict Node Version](#strict-node-version)  
-3. [TypeScript](#typescript)  
-4. [ESLint](#eslint)  
-5. [Prettier](#prettier)  
-6. [Pre-commiting](#pre-commiting)  
-7. [Story Book](#story-book)  
-8. [Mocking API](#mocking-api)  
+- [Frontend](#frontend)
+  * [NextJS](#nextjs)
+    + [Install Nextjs](#install-nextjs)
+    + [Nestjs Folder Structure (Before V13)](#nestjs-folder-structure-before-v13)
+    + [Nestjs Folder Structure (After V13)](#nestjs-folder-structure-after-v13)
+    + [Setup the Charka UI](#setup-the-charka-ui)
+  * [Strict Node Version](#strict-node-version)
+  * [TypeScript](#typescript)
+  * [ESLint](#eslint)
+  * [Prettier](#prettier)
+  * [Pre-commiting](#pre-commiting)
+  * [Story Book](#story-book)
+    + [Storybook Configuration](#storybook-configuration)
+    + [Storybook scripts](#storybook-scripts)
+    + [Documenting components](#documenting-components)
+    + [Button stories](#button-stories)
+  * [Mocking API](#mocking-api)
+    + [Why is mocking useful?](#why-is-mocking-useful)
+    + [Workign with MSW](#workign-with-msw)
+- [Trouble Shooting](#trouble-shooting)
+  * [FRONTEND](#frontend)
+    + [1. **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.](#1--issue-run-npm-run-lint-error-when-checking-the-app-or-pages-on-the-nextjs-project)
+    + [2. **Issue**: `npm run lint` error for storybook render files](#2-issue-npm-run-lint-error-for-storybook-render-files)
+    + [3. **Issue**: We would like reformat only the changed files.](#3-issue-we-would-like-reformat-only-the-changed-files)
+    + [4. **ISSUE**: Tsconfig is not property?](#4-issue-tsconfig-is-not-property)
+    + [5. **ISSUE**: require(..) in condition does not work in es6 import/export](#5-issue-require-in-condition-does-not-work-in-es6-importexport)
+    + [6. **ISSUE**: I would like to make the TOC (Table of content) for the markdown file](#6-issue-i-would-like-to-make-the-toc-table-of-content-for-the-markdown-file)
 
-[Backend](#backend)
-
-[Troubleshooting](#troubleshooting)
+<!-- tocstop -->
 
 ## Frontend
 
@@ -224,7 +237,7 @@ nvm use
 Our project already has TypeScript configured. The TypeScript configuration is defined in the tsconfig.json file at the root of the project. It allows us to configure how strict we want it to be based on our needs:
 
 
-```js
+```json
 {
   "compilerOptions": {
     "target": "es5",
@@ -250,9 +263,27 @@ Our project already has TypeScript configured. The TypeScript configuration is d
   "exclude": ["node_modules"]
 }
 ```
-We will not dive too deeply into every configuration property since most of the properties have been auto-generated. However, there is one thing that was also provided:
 
-```js
+Here’s what each line means:
+
+- `"target": "es5"`: This specifies the version of JavaScript that the TypeScript code will be compiled to. In this case, it is set to es5, which is an older version of JavaScript that is widely supported by browsers.
+- `"lib": ["dom", "dom.iterable", "esnext"]`: This specifies the library files that will be included in the compilation. In this case, it includes the dom and dom.iterable libraries for working with the Document Object Model (DOM) and the esnext library for using newer JavaScript features.
+- `"allowJs": true`: This allows JavaScript files to be included in the compilation.
+- `"skipLibCheck": true`: This skips type checking of declaration files.
+- `"strict": true`: This enables all strict type checking options.
+- `"forceConsistentCasingInFileNames": true`: This ensures that the casing of file names is consistent.
+- `"noEmit": true`: This prevents the compiler from emitting any output files.
+- `"esModuleInterop": true`: This enables interoperability between CommonJS and ES Modules via the creation of namespace objects for all imports.
+- `"module": "esnext"`: This specifies the module code generation. In this case, it is set to esnext, which means that the latest module syntax will be used.
+- `"moduleResolution": "bundler"`: This specifies how module imports are resolved. In this case, it is set to bundler, which means that a bundler like webpack or rollup will be used to resolve modules.
+- `"resolveJsonModule": true`: This allows importing JSON files as modules.
+- `"isolatedModules": true`: This ensures that each file can be transpiled independently without relying on type information from other files.
+- `"jsx": "preserve"`: This specifies how JSX syntax should be handled. In this case, it is set to preserve, which means that JSX syntax will be preserved in the output and not transformed.
+- `"incremental": true`: This enables incremental compilation by reusing information from previous compilations to speed up subsequent builds.
+
+There is a thing that was also provided:
+
+```json
 "baseUrl": ".",
 "paths": {
     "@/*": ["./src/*"]
@@ -529,7 +560,7 @@ Then, we can start by adding the required imports:
 
 ```js
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { Button, ButtonProps } from './button';
 ```
 Then, we create the meta configuration object:
@@ -548,7 +579,7 @@ Since we can have multiple stories, we must create a story template:
 
 
 ```js
-const Template: Story<ButtonProps> = (props) => (
+const Template: StoryFn<ButtonProps> = (props) => (
   <Button {...props} />
 );
 ```
@@ -795,11 +826,11 @@ After setup and run project with `npm run dev` we have
 
 ## Trouble Shooting
 ### FRONTEND
-1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.
+#### 1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.
 
 Resolve: default use `next lint`, we should use `eslint` instead
 
-2. **Issue**: `npm run lint` error for storybook render files
+#### 2. **Issue**: `npm run lint` error for storybook render files
 ```
 (node:92683) ExperimentalWarning: The ESM module loader is experimental.
 internal/modules/run_main.js:54
@@ -816,7 +847,7 @@ Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only file and data URLs are supported by
 ```
 Resolve: Add the ignore pattern to the `.eslintignore` file
 
-3. **Issue**: We would like reformat only the changed files.
+#### 3. **Issue**: We would like reformat only the changed files.
 So we would like to run the command as below:
 ```sh
 npx prettier --write $(git diff --staged --name-only --diff-filter d | grep  -E "\.js|\.ts" | xargs) 
@@ -832,10 +863,16 @@ Resolve: The reason is that the `git diff` command need to return the relative p
 prettier --write $(git diff --staged --name-only --relative --diff-filter d | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
 ```
 
-4. **ISSUE**: Tsconfig is not property?
+#### 4. **ISSUE**: Tsconfig is not property?
 Resolve: `npx tsc --traceResolution` to see the error 
 
-5. **ISSUE**: require(..) in condition does not work in es6 import/export
+The command `npx tsc --traceResolution` is used to run the TypeScript compiler (`tsc`) with the `--traceResolution` flag. The `npx` command is used to execute a command from a package that is not installed globally, in this case, the TypeScript compiler.
+
+The `--traceResolution` flag is used to provide detailed information about how the TypeScript compiler resolves module imports. When this flag is used, the compiler will output information about each module import it encounters, including the file path of the imported module and any relevant configuration options that were used to resolve the import.
+
+This can be useful for debugging issues with module resolution, such as when a module cannot be found or when the wrong version of a module is being imported. By using the `--traceResolution` flag, you can see exactly how the compiler is resolving each import and identify any issues that may be causing problems.
+
+#### 5. **ISSUE**: require(..) in condition does not work in es6 import/export
 ```js
  const { server } = require('./server');
     server.listen();
@@ -848,5 +885,24 @@ Resolve: using `import('lib').then()` instead
     });
 ```
 
+#### 6. **ISSUE**: I would like to make the TOC (Table of content) for the markdown file
 
+Resolve: using the `markdown-toc` package
+```sh
+npm install markdown-toc --save-dev
+```
+
+For example, incase you would like to make the TOC for the `README.md` file, you need to add the following content to the `README.md` file:
+```md
+<!-- toc -->
+```
+
+Then add the script to the `package.json` file
+```json
+"scripts": {
+    "toc": "markdown-toc -i README.md"
+}
+```
+
+Then run the command `npm run toc` to generate the TOC for the `README.md` file.
 
