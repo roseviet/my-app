@@ -1,6 +1,7 @@
 # How I setup the project
 
 Table of Content
+
 <!-- toc -->
 
 - [Frontend](#frontend)
@@ -615,6 +616,7 @@ npm run storybook
       <img width="75%" style="border-color:blue;" src="./doc-assets/storybook.png" />
   </kbd>
 </p>
+
 ### Mocking API
 
 #### Why is mocking useful?
@@ -632,7 +634,7 @@ You may ask yourself, Why do we want to bother with setting a mocked API? There 
 
 For testing our API endpoints, we will use the Mock Service Worker (MSW) library, a great tool that allows us to mock endpoints in a very elegant way.
 
-#### Workign with MSW
+#### Working with MSW
 
 ```mermaid
 sequenceDiagram
@@ -830,6 +832,124 @@ After setup and run project with `npm run dev` we have
   </kbd>
 </p>
 
+### API Client with Axios and @tanstack/react-query
+
+```sh
+npm install axios @tanstack/react-query@4 @tanstack/react-query-devtools@4 --save  
+```
+
+Config rest client api on `src/lib/api-client.ts`:
+```js
+import Axios from 'axios';
+import { API_URL } from '@/config/constants';
+export const apiClient = Axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+apiClient.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    const message =
+      error.response?.data?.message || error.message;
+    console.error(message);
+    return Promise.reject(error);
+  }
+);
+```
+
+To use the `react-query` we need to config the `react-query -client` on `src/lib/react-query.ts` and support `react-query-provider` to use `useQuery` correctly.
+
+
+Config `queryClient` on `src/lib/react-query.ts`:
+```js
+import { QueryClient } from '@tanstack/react-query';
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+      useErrorBoundary: true,
+    },
+  },
+});
+```
+
+Using the `QueryClientProvider` at `src/providers/app.tsx`:
+```js
+
+import {
+  ChakraProvider,
+  GlobalStyle,
+} from '@chakra-ui/react';
+import { QueryClientProvider } from '@tanstack/
+  react-query';
+import { ReactQueryDevtools } from '@tanstack/
+  react-query-devtools';
+import { ReactNode } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { theme } from '@/config/theme';
+import { queryClient } from '@/lib/react-query';
+type AppProviderProps = {
+  children: ReactNode;
+};
+export const AppProvider = ({
+  children,
+}: AppProviderProps) => {
+  return (
+    <ChakraProvider theme={theme}>
+      <ErrorBoundary
+        fallback={<div>Something went wrong!</div>}
+        onError={console.error}
+      >
+        <GlobalStyle />
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          {children}
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </ChakraProvider>
+  );
+};
+
+```
+
+Example to use `react-query` to implement the `GET /jobs` API:
+
+```js
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/lib/api-client';
+import { Job } from '../types';
+type GetJobsOptions = {
+  params: {
+    organizationId: string | undefined;
+  };
+};
+export const getJobs = ({
+  params,
+}: GetJobsOptions): Promise<Job[]> => {
+  return apiClient.get('/jobs', {
+    params,
+  });
+};
+export const useJobs = ({ params }: GetJobsOptions) => {
+  const { data, isFetching, isFetched } = useQuery({
+    queryKey: ['jobs', params],
+    queryFn: () => getJobs({ params }),
+    enabled: !!params.organizationId,
+    initialData: [],
+  });
+  return {
+    data,
+    isLoading: isFetching && !isFetched,
+  };
+};
+```
+
+
 ## Trouble Shooting
 ### FRONTEND
 #### 1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.
@@ -906,11 +1026,12 @@ Resolve: using `import('lib').then()` instead
 Resolve: using the `markdown-toc` package
 ```sh
 npm install markdown-toc --save-dev
+markdown-toc --help
 ```
 
 For example, incase you would like to make the TOC for the `README.md` file, you need to add the following content to the `README.md` file:
 ```md
-<!-- toc -->
+< ! - - t o c - - > 
 ```
 
 Then add the script to the `package.json` file

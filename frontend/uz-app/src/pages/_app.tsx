@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
-import React, { ReactNode, ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { API_MOCKING } from '@/config/constants';
 import { MSWWrapperProps } from '@/lib/msw';
-import { Providers as AppProvider } from '@/providers/app';
+import { AppProvider } from '@/providers/app';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -25,12 +25,13 @@ const App = ({
 }: AppPropsWithLayout) => {
   const getLayout =
     Component.getLayout ?? ((page) => page);
+
   const pageContent = getLayout(
     <Component {...pageProps} />
   );
+
   return (
     <AppProvider>
-      {' '}
       {API_MOCKING ? (
         <MSWWrapper>{pageContent}</MSWWrapper>
       ) : (
