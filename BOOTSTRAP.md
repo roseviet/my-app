@@ -856,7 +856,7 @@ Resolve: Add the ignore pattern to the `.eslintignore` file
 #### 3. **Issue**: We would like reformat only the changed files.
 So we would like to run the command as below:
 ```sh
-npx prettier --write $(git diff --staged --name-only --diff-filter d | grep  -E "\.js|\.ts" | xargs) 
+npx prettier --write $(git diff --staged --name-only | grep  -E "\.js|\.ts" | xargs) 
 ```
 But we got the error:
 ```
@@ -866,8 +866,18 @@ But we got the error:
 
 Resolve: The reason is that the `git diff` command need to return the relative path, so we need to add the `--relative` option to the `git diff` command:
 ```sh
-prettier --write $(git diff --staged --name-only --relative --diff-filter d | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
+prettier --write $(git diff --staged --name-only --relative | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs)
 ```
+
+The command `git diff --staged --name-only --relative | grep  -E "\.js|\.ts|\.css|\.scss|\.sass" | xargs` is a combination of several commands that are used to perform a specific task. Here’s what each part of the command does:
+
+- `git diff --staged --name-only --relative`: This part of the command uses the git diff command to show the differences between the staged changes and the current state of the repository. The `--staged` flag specifies that only staged changes should be shown, while the `--name-only` flag specifies that only the names of changed files should be displayed. The `--relative` flag makes the output relative to the current directory.
+
+- `grep -E "\.js|\.ts|\.css|\.scss|\.sass"`: This part of the command uses the grep command to filter the output of the previous command. The `-E` flag specifies that extended regular expressions should be used, and the regular expression `"\.js|\.ts|\.css|\.scss|\.sass"` matches any file name that ends with `.js`, `.ts`, `.css`, `.scss`, or `.sass`.
+
+- `xargs`: This part of the command uses the `xargs` command to take the output of the previous command and pass it as arguments to another command. In this case, no other command is specified, so xargs will simply print out the arguments it receives.
+
+In summary, this command shows the names JavaScript, TypeScript, CSS, SCSS, and SASS files that have been staged for commit in a Git repository.
 
 #### 4. **ISSUE**: Tsconfig is not property?
 Resolve: `npx tsc --traceResolution` to see the error 
