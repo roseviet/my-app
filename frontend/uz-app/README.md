@@ -11,6 +11,7 @@ npm install
 ## Run Development Server
 ```bash
 nvm use
+cat .env.example > .env.local
 npm run dev
 # then open http://localhost:3000
 ```

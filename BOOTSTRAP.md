@@ -1,9 +1,31 @@
 # How I setup the project
 
+Table of Content
+
+[Frontend](#frontend)  
+1. [NextJS](#nextjs)  
+    1.1 [Install Nextjs](#install-nextjs)  
+    1.2 [Nestjs Folder Structure (Before V)](#nestjs-folder-structure-before-v)  
+    1.3 [Nestjs Folder Structure (After V)](#nestjs-folder-structure-after-v)  
+    1.4 [Setup the Charka UI](#setup-the-charka-ui)  
+2. [Strict Node Version](#strict-node-version)  
+3. [TypeScript](#typescript)  
+4. [ESLint](#eslint)  
+5. [Prettier](#prettier)  
+6. [Pre-commiting](#pre-commiting)  
+7. [Story Book](#story-book)  
+8. [Mocking API](#mocking-api)  
+
+[Backend](#backend)
+
+[Troubleshooting](#troubleshooting)
+
 ## Frontend
 
 ### NextJS
-*This content is copy/learn from the Ebook: React Application Architecture for Production by Adam Giese*
+*This content is copy/learn from the Ebook: React Application Architecture for Production by Adam Giese see the github repo [here](https://github.com/PacktPublishing/React-Application-Architecture-for-Production/tree/main)*
+
+#### Install Nextjs
 
 ```sh
 npx create-next-app@latest uz-app --typescript
@@ -39,6 +61,138 @@ Let’s analyze each file and folder one by one:
     - `dev`: Starts a development server on localhost:3000
     - `build`: Builds the application for production
     - `start`: Starts the production build on localhost:3000
+
+
+#### Nestjs Folder Structure (Before V13)
+
+**NOTE** This is structure for the Nextjs [Page Layout](https://nextjs.org/docs/pages/building-your-application/routing/pages-and-layouts)
+
+
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/nextjs-folder-structure.png" />
+  </kbd>
+</p>
+
+As we already mentioned, React is very flexible when it comes to project structure.
+
+Some of the benefits of having a good project structure are as follows:
+
+- Separation of concerns
+- Easier refactors
+- Better reasoning about the code base
+- Easier for larger teams to work on the code base simultaneously
+
+Let’s see what the feature-based project structure looks like.
+
+NOTE
+
+We will focus on the src folder only since, from now on, most of the code base lives there.
+
+Here is the structure of our src folder:
+
+
+```
+- components // (1)
+- config // (2)
+- features // (3)
+- layouts // (4)
+- lib // (5)
+- pages // (6)
+- providers // (7)
+- stores // (8)
+- testing // (9)
+- types // (10)
+- utils // (11)
+```
+Let’s analyze each of the folders, one by one:
+
+- `components`: Contains all shared components that are used across the entire application.
+- `config`: Contains the application configuration files.
+- `features`: Contains all the feature-based modules. We will analyze this one in more detail in the following section.
+- `layouts`: Contains different layouts for the pages.
+- `lib`: Contains configurations for different libraries that are used in our application.
+- `pages`: Contains the pages of our application. This is where Next.js will look for pages in the filesystem-based routing.
+- `providers`: Contains all application providers. For example, if our application uses many different providers for styling, state, and so on, we can combine them here and export a single application provider with which we can wrap our _app.tsx to make all the providers available on all the pages.
+- `stores`: Contains all global state stores that are used in the application.
+- `testing`: Contains test-related mocks, helpers, utilities, and configurations.
+- `types`: Contains base TypeScript type definitions that are used across the application.
+- `utils`: Contains all shared utility functions.
+
+There is nothing wrong with grouping files in folders based on their types. However, once the application starts to grow, it becomes more difficult to reason about and maintain the code base because there are too many files of a single type.
+
+**Features**
+
+To scale the application in the easiest and most maintainable way, we want to keep most of the application code inside the features folder, which should contain different feature-based things. Every feature folder should contain domain-specific code for a given feature. This will allow us to keep functionalities scoped to a feature and not mix its declarations with the shared things. This is much easier to maintain than a flat folder structure with many files.
+
+Let’s look at one of our feature folders, which has the following structure:
+
+```
+- api // (1)
+- components // (2)
+- types // (3)
+- index.ts // (4)
+```
+
+
+- `api`: Contains the API request declarations and API hooks related to a specific feature. This makes our API layer and the UI layer separate and reusable.
+
+- `components`: Contains all components that are scoped to a specific feature.
+
+- `types`: This contains the TypeScript type definitions for a specific feature.
+
+- `index.ts`: This is the entry point of every feature. It behaves as the public API of the feature, and it should only export things that should be public for other parts of the application.
+
+**Import the Feature Module**
+One more thing we can configure is enforcing developers to import features code via the index.ts file, like so:
+
+
+```js
+import {JobsList} from '@/features/jobs'
+```
+We shouldn’t do this:
+```js
+import {JobsList} from '@/features/jobs/components/jobs-
+  list'
+```
+This will give us a better picture of which dependency is used where and where it comes from. Also, if the feature gets refactored, it doesn’t have to impact any external parts of the application where that component is used.
+
+We can constrain our code by having the following ESLint rule in the .eslintrc.js file:
+
+```js
+rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['@/features/*/*'],
+      },
+    ],
+    'import/no-cycle': 'error',
+      … rest of the eslint rules
+}
+```
+
+The `no-restricted-imports` rule will add constraints to imports from other features by erroring if any violations in the preceding pattern are detected.
+
+Things from a feature can only be consumed if they’re exported from the index.ts file of that feature. This will force us to explicitly make something in a feature publicly available.
+
+If we decide to use features this way, we should also include the `import/no-cycle` rule to prevent cyclic dependencies where Feature A imports things from Feature B and vice versa. If this happens, that means something with the application design is wrong and it needs to be restructured.
+
+#### Nestjs Folder Structure (After V13)
+
+From Nextjs v13, they provide the `app router`, see more detail [here](https://nextjs.org/docs/app/building-your-application/routing#the-app-router). Basically, we use `app` folder for routing instead of the `pages` folder.
+
+We have to look the  [Project Organization and File Colocation](https://nextjs.org/docs/app/building-your-application/routing/colocation)
+
+
+#### Setup the Charka UI
+From the [documentation](https://chakra-ui.com/getting-started), we can see that we need to install the following dependencies:
+
+```sh
+npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+```
+
+For the nextjs we need to have a look on [the particular document](https://chakra-ui.com/getting-started/nextjs-guide) too.
 
 ### Strict Node Version
 We want to make sure that everyone on the team uses the same Node version. This will prevent any potential issues that might occur due to different Node versions.
@@ -167,7 +321,7 @@ Fortunately, there is a solution that can fix this problem: whenever we try to c
 
 <p align="center">
   <kbd>
-	  <img width="75%" style="border-color:blue;" src="./doc-assets/pre-commit-checking-diagram.png" />
+      <img width="75%" style="border-color:blue;" src="./doc-assets/pre-commit-checking-diagram.png" />
   </kbd>
 </p>
 
@@ -240,136 +394,6 @@ Then add the permission
 chmod +x .husky/pre-commit
 ```
 
-### Nestjs Folder Structure (Before V13)
-
-**NOTE** This is structure for the Nextjs [Page Layout](https://nextjs.org/docs/pages/building-your-application/routing/pages-and-layouts)
-
-
-<p align="center">
-  <kbd>
-	  <img width="75%" style="border-color:blue;" src="./doc-assets/nextjs-folder-structure.png" />
-  </kbd>
-</p>
-
-As we already mentioned, React is very flexible when it comes to project structure.
-
-Some of the benefits of having a good project structure are as follows:
-
-- Separation of concerns
-- Easier refactors
-- Better reasoning about the code base
-- Easier for larger teams to work on the code base simultaneously
-
-Let’s see what the feature-based project structure looks like.
-
-NOTE
-
-We will focus on the src folder only since, from now on, most of the code base lives there.
-
-Here is the structure of our src folder:
-
-
-```
-- components // (1)
-- config // (2)
-- features // (3)
-- layouts // (4)
-- lib // (5)
-- pages // (6)
-- providers // (7)
-- stores // (8)
-- testing // (9)
-- types // (10)
-- utils // (11)
-```
-Let’s analyze each of the folders, one by one:
-
-- `components`: Contains all shared components that are used across the entire application.
-- `config`: Contains the application configuration files.
-- `features`: Contains all the feature-based modules. We will analyze this one in more detail in the following section.
-- `layouts`: Contains different layouts for the pages.
-- `lib`: Contains configurations for different libraries that are used in our application.
-- `pages`: Contains the pages of our application. This is where Next.js will look for pages in the filesystem-based routing.
-- `providers`: Contains all application providers. For example, if our application uses many different providers for styling, state, and so on, we can combine them here and export a single application provider with which we can wrap our _app.tsx to make all the providers available on all the pages.
-- `stores`: Contains all global state stores that are used in the application.
-- `testing`: Contains test-related mocks, helpers, utilities, and configurations.
-- `types`: Contains base TypeScript type definitions that are used across the application.
-- `utils`: Contains all shared utility functions.
-
-There is nothing wrong with grouping files in folders based on their types. However, once the application starts to grow, it becomes more difficult to reason about and maintain the code base because there are too many files of a single type.
-
-**Features**
-
-To scale the application in the easiest and most maintainable way, we want to keep most of the application code inside the features folder, which should contain different feature-based things. Every feature folder should contain domain-specific code for a given feature. This will allow us to keep functionalities scoped to a feature and not mix its declarations with the shared things. This is much easier to maintain than a flat folder structure with many files.
-
-Let’s look at one of our feature folders, which has the following structure:
-
-```
-- api // (1)
-- components // (2)
-- types // (3)
-- index.ts // (4)
-```
-
-
-- `api`: Contains the API request declarations and API hooks related to a specific feature. This makes our API layer and the UI layer separate and reusable.
-
-- `components`: Contains all components that are scoped to a specific feature.
-
-- `types`: This contains the TypeScript type definitions for a specific feature.
-
-- `index.ts`: This is the entry point of every feature. It behaves as the public API of the feature, and it should only export things that should be public for other parts of the application.
-
-**Import the Feature Module**
-One more thing we can configure is enforcing developers to import features code via the index.ts file, like so:
-
-
-```js
-import {JobsList} from '@/features/jobs'
-```
-We shouldn’t do this:
-```js
-import {JobsList} from '@/features/jobs/components/jobs-
-  list'
-```
-This will give us a better picture of which dependency is used where and where it comes from. Also, if the feature gets refactored, it doesn’t have to impact any external parts of the application where that component is used.
-
-We can constrain our code by having the following ESLint rule in the .eslintrc.js file:
-
-```js
-rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: ['@/features/*/*'],
-      },
-    ],
-    'import/no-cycle': 'error',
-      … rest of the eslint rules
-}
-```
-
-The `no-restricted-imports` rule will add constraints to imports from other features by erroring if any violations in the preceding pattern are detected.
-
-Things from a feature can only be consumed if they’re exported from the index.ts file of that feature. This will force us to explicitly make something in a feature publicly available.
-
-If we decide to use features this way, we should also include the `import/no-cycle` rule to prevent cyclic dependencies where Feature A imports things from Feature B and vice versa. If this happens, that means something with the application design is wrong and it needs to be restructured.
-
-### Nestjs Folder Structure (After V13)
-
-From Nextjs v13, they provide the `app router`, see more detail [here](https://nextjs.org/docs/app/building-your-application/routing#the-app-router). Basically, we use `app` folder for routing instead of the `pages` folder.
-
-We have to look the  [Project Organization and File Colocation](https://nextjs.org/docs/app/building-your-application/routing/colocation)
-
-
-### Setup the Charka UI
-From the [documentation](https://chakra-ui.com/getting-started), we can see that we need to install the following dependencies:
-
-```sh
-npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
-```
-
-For the nextjs we need to have a look on [the particular document](https://chakra-ui.com/getting-started/nextjs-guide) too.
 
 ### Story Book
 Storybook is a tool that allows us to develop and test UI components in isolation. We can think of it as a tool for making catalogs of all the components we have. It is great for documenting components. A couple of benefits of using Storybook include the following:
@@ -554,8 +578,222 @@ To see the story, let’s execute the following command:
 ```sh
 npm run storybook
 ```
+### Mocking API
 
-## Error & By pass
+#### Why is mocking useful?
+Mocking is the process of simulating parts of the system, meaning they are not production-ready but fake versions that are useful for development and testing.
+
+You may ask yourself, Why do we want to bother with setting a mocked API? There are several benefits of having the API mocked:
+
+- `Independence of external services during development`: A web application usually consists of many different parts such as the frontend, the backend, external third-party APIs, and so on. When developing our frontends, we want to be as autonomous as possible without getting blocked by some parts of the system that are not functional. If the API of our application is broken or unfinished, we should still be able to proceed with developing the frontend part of the application.
+
+- `Good for quick prototyping`: Mocked endpoints allow us to prototype the application quicker since they don't require any additional setup such as the backend server, database, and so on. Very useful for building proofs of concept (POCs) and minimum viable product (MVP) applications.
+
+- `Offline development`: Having mocked API endpoints allows us to develop our application without an internet connection.
+
+- `Testing`: We do not want to hit our real services while testing our frontends. That’s where mocked APIs become useful. We can build and test the entire functionality as if we were building it against a real API and then switch to the real one when in production.
+
+For testing our API endpoints, we will use the Mock Service Worker (MSW) library, a great tool that allows us to mock endpoints in a very elegant way.
+
+#### Workign with MSW
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Service Worker
+    participant MSW
+    Browser->>Service Worker: 1. Request
+    Service Worker->>MSW: 2. Request clone
+    MSW->>MSW: 3. Match against mocks
+    MSW->>Service Worker: Mocked Response
+    Service Worker->>Browser: responseWith(mockedResponse)
+```
+
+**Init & Setup MSW**
+```sh
+npx msw init public/ --save
+npm install msw @mswjs/data msw-devtools --save-dev
+```
+
+Set more setup information at [here](https://mswjs.io/docs/getting-started/mocks)
+
+At `src/testing/mocks/browser.ts`
+```js
+import { setupWorker } from 'msw';
+import { handlers } from './handlers';
+export const worker = setupWorker(...handlers);
+```
+
+At `src/testing/mocks/server.ts`
+```js
+import { setupServer } from 'msw/node';
+import { handlers } from './handlers';
+export const server = setupServer(...handlers);
+```
+
+At `src/testing/mocks/initialize.ts`:
+```js
+import { IS_SERVER } from '@/config/constants';
+const initializeMocks = () => {
+  if (IS_SERVER) {
+    const { server } = require('./server');
+    server.listen();
+  } else {
+    const { worker } = require('./browser');
+    worker.start();
+  }
+};
+initializeMocks();
+```
+
+Integrate Mock at `src/lib/msw.tsx`:
+```js
+import { MSWDevTools } from 'msw-devtools';
+import { ReactNode } from 'react';
+import { IS_DEVELOPMENT } from '@/config/constants';
+import { db, handlers } from '@/testing/mocks';
+export type MSWWrapperProps = {
+  children: ReactNode;
+};
+require('@/testing/mocks/initialize');
+export const MSWWrapper = ({
+  children,
+}: MSWWrapperProps) => {
+  return (
+    <>
+      {IS_DEVELOPMENT && (
+        <MSWDevTools db={db} handlers={handlers} />
+      )}
+      {children}
+    </>
+  );
+};
+```
+
+Link to Nextjs App at `src/pages/_app.tsx`:
+```js
+import dynamic from 'next/dynamic';
+import { API_MOCKING } from '@/config/constants';
+import { MSWWrapperProps } from '@/lib/msw';
+
+// ...
+const MSWWrapper = dynamic<MSWWrapperProps>(() =>
+  import('@/lib/msw').then(({ MSWWrapper }) => MSWWrapper)
+);
+
+
+// ...
+return (
+    <AppProvider>
+      {API_MOCKING ? (
+        <MSWWrapper>{pageContent}</MSWWrapper>
+      ) : (
+        pageContent
+      )}
+    </AppProvider>
+  );
+
+```
+
+Try with first handler `src/testing/mocks/handlers/index.ts`:
+```js
+import { rest } from 'msw';
+import { API_URL } from '@/config/constants';
+export const handlers = [
+  rest.get(`${API_URL}/healthcheck`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ healthy: true })
+    );
+  }),
+];
+```
+
+Config memory db at `src/testing/mocks/db.ts`:
+It will support db operator like `db.job.{findFirst|findMany|create|update|delete}`
+```js
+import { factory, primaryKey } from '@mswjs/data';
+import { uid } from '@/utils/uid';
+const models = {
+  user: {
+    id: primaryKey(uid),
+    createdAt: Date.now,
+    email: String,
+    password: String,
+    organizationId: String,
+  },
+  organization: {
+    id: primaryKey(uid),
+    createdAt: Date.now,
+    adminId: String,
+    name: String,
+    email: String,
+    phone: String,
+    info: String,
+  },
+  job: {
+    id: primaryKey(uid),
+    createdAt: Date.now,
+    organizationId: String,
+    position: String,
+    info: String,
+    location: String,
+    department: String,
+  },
+};
+export const db = factory(models);
+```
+
+Populate data to db from test_data file at `src/testing/mocks/seed-db.ts`:
+```js
+import { db } from './db';
+import { testData } from '../test-data';
+export const seedDb = () => {
+  const userCount = db.user.count();
+  if (userCount > 0) return;
+  testData.users.forEach((user) => db.user.create(user));
+  testData.organizations.forEach((organization) =>
+    db.organization.create(organization)
+  );
+  testData.jobs.forEach((job) => db.job.create(job));
+};
+```
+
+and init the db at `src/testing/mocks/initialize.ts`:
+```js
+import { IS_SERVER } from '@/config/constants';
+import { seedDb } from './seed-db';
+const initializeMocks = () => {
+  if (IS_SERVER) {
+    const { server } = require('./server');
+    server.listen();
+  } else {
+    const { worker } = require('./browser');
+    worker.start();
+  }
+  seedDb();
+};
+initializeMocks();
+```
+
+After setup and run project with `npm run dev` we have
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/mock_dev-tool.png" />
+  </kbd>
+</p>
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/mock_dev-tool_api.png" />
+  </kbd>
+</p>
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/mock_dev-tool_data.png" />
+  </kbd>
+</p>
+
+## Trouble Shooting
 ### FRONTEND
 1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.
 
@@ -597,7 +835,18 @@ prettier --write $(git diff --staged --name-only --relative --diff-filter d | gr
 4. **ISSUE**: Tsconfig is not property?
 Resolve: `npx tsc --traceResolution` to see the error 
 
+5. **ISSUE**: require(..) in condition does not work in es6 import/export
+```js
+ const { server } = require('./server');
+    server.listen();
+```
 
+Resolve: using `import('lib').then()` instead
+```js
+    import ('./server').then(({server}) => {
+        server.listen();
+    });
+```
 
 
 
