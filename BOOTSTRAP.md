@@ -609,6 +609,12 @@ To see the story, let’s execute the following command:
 ```sh
 npm run storybook
 ```
+
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/storybook.png" />
+  </kbd>
+</p>
 ### Mocking API
 
 #### Why is mocking useful?
