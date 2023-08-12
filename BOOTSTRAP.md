@@ -962,6 +962,32 @@ And the UI provide the devtool likes pictures as below
 </p>
 
 
+### Authentication with Auth Cookie
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Server
+
+    Browser ->> Server: Post /auth/login email and password
+    Server ->> Browser: auth token in httpOnly cookie + user info in response body
+    Browser ->> Server: Get /auth/me with auth cookie
+    Server ->> Browser: user info in response body
+```
+
+The preceding diagram is explained as follows:
+
+1. The user submits the login form with the credentials by creating a request to the /auth/login endpoint.
+2. If the user exists and the credentials are valid, a response with the user data returns. In addition to the response data, we are also attaching an httpOnly cookie, which will be used from this point onward for authenticated requests.
+3. Whenever the user authenticates, we will store the user object from the response in react-query’s cache and make it available to the application.
+4. Since the authentication is cookie-based with httpOnly cookies, we do not need to handle the authentication token on the frontend. Any subsequent requests will include the token automatically.
+5. Persisting user data on page refreshes will be handled by calling the /auth/me endpoint, which will fetch the user data and store it in the same react-query cache.
+
+To implement this system, we need the following:
+
+- Auth features (login, logout, and accessing the authenticated user)
+- Protect resources that require the user to be authenticated
+
 ## Trouble Shooting
 ### FRONTEND
 #### 1.  **Issue**: Run `npm run lint` error when checking the `app` or `pages` on the nextjs project.

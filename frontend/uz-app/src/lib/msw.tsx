@@ -3,12 +3,13 @@ import { ReactNode } from 'react';
 
 import { IS_DEVELOPMENT } from '@/config/constants';
 import { db, handlers } from '@/testing/mocks';
+import { initializeMocks } from '@/testing/mocks/initialize';
 
 export type MSWWrapperProps = {
   children: ReactNode;
 };
 
-require('@/testing/mocks/initialize');
+initializeMocks();
 
 export const MSWWrapper = ({
   children,

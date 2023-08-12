@@ -1,7 +1,7 @@
 import { IS_SERVER } from '@/config/constants';
 import { seedDb } from './seed-db';
 
-const initializeMocks = () => {
+export const initializeMocks = () => {
   if (IS_SERVER) {
     import('./server').then(({ server }) => {
       server.listen();
@@ -13,5 +13,3 @@ const initializeMocks = () => {
   }
   seedDb();
 };
-
-initializeMocks();
