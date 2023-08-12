@@ -1,16 +1,23 @@
-import { InfoOutlineIcon } from "@chakra-ui/icons";
-import { Box, Container, Flex, HStack } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { InfoOutlineIcon } from '@chakra-ui/icons';
+import {
+  Box,
+  Container,
+  Flex,
+  HStack,
+} from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
-import { Button } from "@/components/button";
-import { Link } from "@/components/link";
-import { useUser } from "@/testing/test-data";
+import { Button } from '@/components/button';
+import { Link } from '@/components/link';
+import { useUser } from '@/testing/test-data';
 
 type DashboardLayoutProps = {
   children: ReactNode;
 };
 
-export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+export const DashboardLayout = ({
+  children,
+}: DashboardLayoutProps) => {
   const user = useUser();
 
   return (
@@ -20,7 +27,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         {children}
       </Container>
       <Box py="8" textAlign="center">
-        <Link href={`/organizations/${user.data?.organizationId}`}>
+        <Link
+          href={`/organizations/${user.data?.organizationId}`}
+        >
           View Public Organization Page
         </Link>
       </Box>
@@ -50,7 +59,9 @@ const Navbar = () => {
           <HStack>
             <Button
               variant="outline"
-              onClick={() => console.log("Logging Out...")}
+              onClick={() =>
+                console.log('Logging Out...')
+              }
             >
               Log Out
             </Button>

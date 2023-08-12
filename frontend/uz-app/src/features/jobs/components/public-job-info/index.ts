@@ -1,1 +1,1 @@
-export * from "./public-job-info";
+export * from './public-job-info';

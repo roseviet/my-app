@@ -1,10 +1,15 @@
-import { ViewIcon } from "@chakra-ui/icons";
-import { Heading, HStack, VStack, Text } from "@chakra-ui/react";
+import { ViewIcon } from '@chakra-ui/icons';
+import {
+  Heading,
+  HStack,
+  VStack,
+  Text,
+} from '@chakra-ui/react';
 
-import { Content } from "@/components/content";
-import { Link } from "@/components/link";
+import { Content } from '@/components/content';
+import { Link } from '@/components/link';
 
-import { Job } from "../../types";
+import { Job } from '../../types';
 
 export const PublicJobInfo = ({ job }: { job: Job }) => {
   return (

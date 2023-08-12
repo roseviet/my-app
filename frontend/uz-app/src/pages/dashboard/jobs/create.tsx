@@ -1,10 +1,10 @@
-import { Heading } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { Heading } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 
-import { Seo } from "@/components/seo";
-import { CreateJobForm } from "@/features/jobs";
-import { DashboardLayout } from "@/layouts/dashboard-layout";
+import { Seo } from '@/components/seo';
+import { CreateJobForm } from '@/features/jobs';
+import { DashboardLayout } from '@/layouts/dashboard-layout';
 
 const DashboardCreateJobPage = () => {
   const router = useRouter();
@@ -22,7 +22,9 @@ const DashboardCreateJobPage = () => {
   );
 };
 
-DashboardCreateJobPage.getLayout = function getLayout(page: ReactElement) {
+DashboardCreateJobPage.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

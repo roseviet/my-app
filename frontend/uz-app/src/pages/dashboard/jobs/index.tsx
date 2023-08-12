@@ -1,18 +1,18 @@
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { Heading, HStack } from "@chakra-ui/react";
-import { ReactElement } from "react";
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Heading, HStack } from '@chakra-ui/react';
+import { ReactElement } from 'react';
 
-import { Link } from "@/components/link";
-import { Loading } from "@/components/loading";
-import { Seo } from "@/components/seo";
-import { JobsList } from "@/features/jobs";
-import { DashboardLayout } from "@/layouts/dashboard-layout";
-import { useJobs, useUser } from "@/testing/test-data";
+import { Link } from '@/components/link';
+import { Loading } from '@/components/loading';
+import { Seo } from '@/components/seo';
+import { JobsList } from '@/features/jobs';
+import { DashboardLayout } from '@/layouts/dashboard-layout';
+import { useJobs, useUser } from '@/testing/test-data';
 
 const DashboardJobsPage = () => {
   const user = useUser();
 
-  const jobs = useJobs(user.data?.organizationId ?? "");
+  const jobs = useJobs(user.data?.organizationId ?? '');
 
   if (jobs.isLoading) return <Loading />;
 
@@ -21,7 +21,11 @@ const DashboardJobsPage = () => {
   return (
     <>
       <Seo title="Jobs" />
-      <HStack mb="8" align="center" justify="space-between">
+      <HStack
+        mb="8"
+        align="center"
+        justify="space-between"
+      >
         <Heading>Jobs</Heading>
         <Link
           icon={<PlusSquareIcon />}
@@ -41,7 +45,9 @@ const DashboardJobsPage = () => {
   );
 };
 
-DashboardJobsPage.getLayout = function getLayout(page: ReactElement) {
+DashboardJobsPage.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

@@ -1,17 +1,22 @@
-import React, { ReactElement } from "react";
-import { Heading, Stack } from "@chakra-ui/react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import React, { ReactElement } from 'react';
+import { Heading, Stack } from '@chakra-ui/react';
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 
-import { NotFound } from "@/components/not-found";
-import { Seo } from "@/components/seo";
-import { JobsList, Job } from "@/features/jobs";
-import { OrganizationInfo } from "@/features/organizations";
-import { PublicLayout } from "@/layouts/public-layout";
-import { getJobs, getOrganization } from "@/testing/test-data";
+import { NotFound } from '@/components/not-found';
+import { Seo } from '@/components/seo';
+import { JobsList, Job } from '@/features/jobs';
+import { OrganizationInfo } from '@/features/organizations';
+import { PublicLayout } from '@/layouts/public-layout';
+import {
+  getJobs,
+  getOrganization,
+} from '@/testing/test-data';
 
-type PublicOrganizationPageProps = InferGetServerSidePropsType<
-  typeof getServerSideProps
->;
+type PublicOrganizationPageProps =
+  InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const PublicOrganizationPage = ({
   organization,
@@ -22,18 +27,31 @@ const PublicOrganizationPage = ({
   return (
     <>
       <Seo title={organization.name} />
-      <Stack spacing="4" w="full" maxW="container.lg" mx="auto" mt="12" p="4">
+      <Stack
+        spacing="4"
+        w="full"
+        maxW="container.lg"
+        mx="auto"
+        mt="12"
+        p="4"
+      >
         <OrganizationInfo organization={organization} />
         <Heading size="md" my="6">
           Open Jobs
         </Heading>
-        <JobsList jobs={jobs} organizationId={organization.id} type="public" />
+        <JobsList
+          jobs={jobs}
+          organizationId={organization.id}
+          type="public"
+        />
       </Stack>
     </>
   );
 };
 
-PublicOrganizationPage.getLayout = function getLayout(page: ReactElement) {
+PublicOrganizationPage.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <PublicLayout>{page}</PublicLayout>;
 };
 

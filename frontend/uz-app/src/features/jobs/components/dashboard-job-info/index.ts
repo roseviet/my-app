@@ -1,1 +1,1 @@
-export * from "./dashboard-job-info";
+export * from './dashboard-job-info';

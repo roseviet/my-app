@@ -8,11 +8,11 @@ import {
   Thead,
   Tr,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { Entity } from "@/types";
+import { Entity } from '@/types';
 
-import { Loading } from "../loading";
+import { Loading } from '../loading';
 
 type DataTableColumn<Entry> = {
   title: string;
@@ -37,20 +37,32 @@ export const DataTable = <Entry extends Entity>({
 
   if (data?.length === 0) {
     return (
-      <Center h="56" p="4" bg="gray.100" borderRadius="md">
+      <Center
+        h="56"
+        p="4"
+        bg="gray.100"
+        borderRadius="md"
+      >
         No Data
       </Center>
     );
   }
 
   return (
-    <Box h="full" rounded="md" borderWidth="1px" bg="whiteAlpha.400">
+    <Box
+      h="full"
+      rounded="md"
+      borderWidth="1px"
+      bg="whiteAlpha.400"
+    >
       <Box overflowX="auto">
         <Table variant="striped" w="full">
           <Thead>
             <Tr>
               {columns.map((column, index) => (
-                <Th key={column.title + index}>{column.title}</Th>
+                <Th key={column.title + index}>
+                  {column.title}
+                </Th>
               ))}
             </Tr>
           </Thead>
@@ -60,13 +72,20 @@ export const DataTable = <Entry extends Entity>({
                 data-testid={`table-row-${entryIndex}`}
                 key={entry.id || entryIndex}
               >
-                {columns.map(({ field, title, render }, columnIndex) => (
-                  <Td key={title + columnIndex}>
-                    <Text>
-                      {render ? render({ entry }) : `${entry[field]}`}
-                    </Text>
-                  </Td>
-                ))}
+                {columns.map(
+                  (
+                    { field, title, render },
+                    columnIndex
+                  ) => (
+                    <Td key={title + columnIndex}>
+                      <Text>
+                        {render
+                          ? render({ entry })
+                          : `${entry[field]}`}
+                      </Text>
+                    </Td>
+                  )
+                )}
               </Tr>
             ))}
           </Tbody>

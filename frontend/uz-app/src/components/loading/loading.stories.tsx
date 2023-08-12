@@ -1,14 +1,16 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta, StoryFn } from '@storybook/react';
 
-import { Loading } from "./loading";
+import { Loading } from './loading';
 
 const meta: Meta = {
-  title: "Components/Loading",
+  title: 'Components/Loading',
   component: Loading,
 };
 
 export default meta;
 
-const Template: StoryFn = (props) => <Loading {...props} />;
+const Template: StoryFn = (props) => (
+  <Loading {...props} />
+);
 
 export const Default = Template.bind({});

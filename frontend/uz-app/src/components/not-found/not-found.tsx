@@ -1,5 +1,9 @@
-import { NotAllowedIcon } from "@chakra-ui/icons";
-import { Center, Heading, VStack } from "@chakra-ui/react";
+import { NotAllowedIcon } from '@chakra-ui/icons';
+import {
+  Center,
+  Heading,
+  VStack,
+} from '@chakra-ui/react';
 
 export const NotFound = () => {
   return (

@@ -1,10 +1,20 @@
-import { Heading, VStack, Text, HStack, Box } from "@chakra-ui/react";
+import {
+  Heading,
+  VStack,
+  Text,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 
-import { Content } from "@/components/content";
+import { Content } from '@/components/content';
 
-import { Job } from "../../types";
+import { Job } from '../../types';
 
-export const DashboardJobInfo = ({ job }: { job: Job }) => {
+export const DashboardJobInfo = ({
+  job,
+}: {
+  job: Job;
+}) => {
   return (
     <VStack>
       <VStack pt="16" pb="4" spacing="8">

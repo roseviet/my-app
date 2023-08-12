@@ -1,7 +1,12 @@
-import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Center,
+  Heading,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 
-import { Link } from "@/components/link";
-import { Seo } from "@/components/seo";
+import { Link } from '@/components/link';
+import { Seo } from '@/components/seo';
 
 const LandingPage = () => {
   return (
@@ -10,10 +15,14 @@ const LandingPage = () => {
       <Center flexDirection="column" h="full">
         <VStack maxW="3xl" spacing="8">
           <Heading size="3xl">UZ APP</Heading>
-          <Text fontSize={{ base: "lg", md: "xl" }} maxW="2xl" color="muted">
+          <Text
+            fontSize={{ base: 'lg', md: 'xl' }}
+            maxW="2xl"
+            color="muted"
+          >
             The custom app for UZ
           </Text>
-          <Link href={"/dashboard/jobs"} variant="solid">
+          <Link href={'/dashboard/jobs'} variant="solid">
             Go to Sample Dashboard Jobs
           </Link>
         </VStack>

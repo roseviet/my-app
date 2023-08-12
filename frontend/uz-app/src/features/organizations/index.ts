@@ -1,5 +1,5 @@
 // components:
-export * from "./components/organization-info";
+export * from './components/organization-info';
 
 // types:
-export * from "./types";
+export * from './types';

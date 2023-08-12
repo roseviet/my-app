@@ -1,4 +1,4 @@
-import { Entity } from "@/types";
+import { Entity } from '@/types';
 
 export type Job = Entity & {
   organizationId: string;

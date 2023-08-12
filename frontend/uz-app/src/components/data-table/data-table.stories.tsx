@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta, StoryFn } from '@storybook/react';
 
-import { testData } from "@/testing/test-data";
+import { testData } from '@/testing/test-data';
 
-import { DataTable, DataTableProps } from "./data-table";
+import { DataTable, DataTableProps } from './data-table';
 
 const meta: Meta = {
-  title: "Components/DataTable",
+  title: 'Components/DataTable',
   component: DataTable,
 };
 
@@ -13,24 +13,26 @@ export default meta;
 
 const data = testData.jobs.slice(0, 6);
 
-const columns: DataTableProps<(typeof data)[0]>["columns"] = [
+const columns: DataTableProps<
+  (typeof data)[0]
+>['columns'] = [
   {
-    title: "Position",
-    field: "position",
+    title: 'Position',
+    field: 'position',
   },
   {
-    title: "Department",
-    field: "department",
+    title: 'Department',
+    field: 'department',
   },
   {
-    title: "Location",
-    field: "location",
+    title: 'Location',
+    field: 'location',
   },
 ];
 
-const Template: StoryFn<DataTableProps<(typeof data)[0]>> = (props) => (
-  <DataTable {...props} />
-);
+const Template: StoryFn<
+  DataTableProps<(typeof data)[0]>
+> = (props) => <DataTable {...props} />;
 
 export const Default = Template.bind({});
 

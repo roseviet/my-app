@@ -1,12 +1,12 @@
-import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 
-import { Loading } from "@/components/loading";
-import { NotFound } from "@/components/not-found";
-import { Seo } from "@/components/seo";
-import { DashboardJobInfo } from "@/features/jobs";
-import { DashboardLayout } from "@/layouts/dashboard-layout";
-import { useJob } from "@/testing/test-data";
+import { Loading } from '@/components/loading';
+import { NotFound } from '@/components/not-found';
+import { Seo } from '@/components/seo';
+import { DashboardJobInfo } from '@/features/jobs';
+import { DashboardLayout } from '@/layouts/dashboard-layout';
+import { useJob } from '@/testing/test-data';
 
 const DashboardJobPage = () => {
   const router = useRouter();
@@ -24,13 +24,17 @@ const DashboardJobPage = () => {
 
   return (
     <>
-      <Seo title={`${job.data.position} | ${job.data.location}`} />
+      <Seo
+        title={`${job.data.position} | ${job.data.location}`}
+      />
       <DashboardJobInfo job={job.data} />
     </>
   );
 };
 
-DashboardJobPage.getLayout = function getLayout(page: ReactElement) {
+DashboardJobPage.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

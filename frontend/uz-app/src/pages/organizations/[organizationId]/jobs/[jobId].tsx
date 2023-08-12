@@ -1,20 +1,31 @@
-import { Stack, Button } from "@chakra-ui/react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { ReactElement } from "react";
+import { Stack, Button } from '@chakra-ui/react';
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import { ReactElement } from 'react';
 
-import { NotFound } from "@/components/not-found";
-import { Seo } from "@/components/seo";
-import { PublicJobInfo } from "@/features/jobs";
-import { PublicLayout } from "@/layouts/public-layout";
-import { getJob, getOrganization } from "@/testing/test-data";
+import { NotFound } from '@/components/not-found';
+import { Seo } from '@/components/seo';
+import { PublicJobInfo } from '@/features/jobs';
+import { PublicLayout } from '@/layouts/public-layout';
+import {
+  getJob,
+  getOrganization,
+} from '@/testing/test-data';
 
 type PublicJobPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
-export const PublicJobPage = ({ job, organization }: PublicJobPageProps) => {
+export const PublicJobPage = ({
+  job,
+  organization,
+}: PublicJobPageProps) => {
   const isInvalid =
-    !job || !organization || organization.id !== job.organizationId;
+    !job ||
+    !organization ||
+    organization.id !== job.organizationId;
 
   if (isInvalid) {
     return <NotFound />;
@@ -29,7 +40,7 @@ export const PublicJobPage = ({ job, organization }: PublicJobPageProps) => {
           bg="primary"
           color="primaryAccent"
           _hover={{
-            opacity: "0.9",
+            opacity: '0.9',
           }}
           as="a"
           href={`mailto:${organization?.email}?subject=Application for ${job.position} position`}
@@ -42,7 +53,9 @@ export const PublicJobPage = ({ job, organization }: PublicJobPageProps) => {
   );
 };
 
-PublicJobPage.getLayout = function getLayout(page: ReactElement) {
+PublicJobPage.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <PublicLayout>{page}</PublicLayout>;
 };
 

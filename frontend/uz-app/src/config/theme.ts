@@ -1,17 +1,17 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme } from '@chakra-ui/react';
 const colors = {
-  primary: "#1a365d",
-  primaryAccent: "#ffffff",
+  primary: '#1a365d',
+  primaryAccent: '#ffffff',
 };
 const styles = {
   global: {
-    "html, body": {
-      height: "100%",
-      bg: "gray.50",
+    'html, body': {
+      height: '100%',
+      bg: 'gray.50',
     },
-    "#__next": {
-      height: "100%",
-      bg: "gray.50",
+    '#__next': {
+      height: '100%',
+      bg: 'gray.50',
     },
   },
 };

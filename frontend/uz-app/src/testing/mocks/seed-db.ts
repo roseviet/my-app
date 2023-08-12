@@ -1,6 +1,6 @@
-import { testData } from "../test-data";
+import { testData } from '../test-data';
 
-import { db } from "./db";
+import { db } from './db';
 
 export const seedDb = () => {
   const userCount = db.user.count();
@@ -10,7 +10,7 @@ export const seedDb = () => {
   testData.users.forEach((user) => db.user.create(user));
 
   testData.organizations.forEach((organization) =>
-    db.organization.create(organization),
+    db.organization.create(organization)
   );
 
   testData.jobs.forEach((job) => db.job.create(job));

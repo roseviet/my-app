@@ -1,13 +1,15 @@
-import { Box } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import { Box } from '@chakra-ui/react';
+import React, { ReactNode } from 'react';
 
-import { Link } from "@/components/link";
+import { Link } from '@/components/link';
 
 type PublicLayoutProps = {
   children: ReactNode;
 };
 
-export const PublicLayout = ({ children }: PublicLayoutProps) => {
+export const PublicLayout = ({
+  children,
+}: PublicLayoutProps) => {
   return (
     <Box maxW="container.lg" mx="auto" h="full">
       <Box minH="80%" mx="4">
