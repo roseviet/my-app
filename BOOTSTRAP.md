@@ -949,6 +949,18 @@ export const useJobs = ({ params }: GetJobsOptions) => {
 };
 ```
 
+And the UI provide the devtool likes pictures as below
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/react-query_devtool.png" />
+  </kbd>
+</p>
+<p align="center">
+  <kbd>
+      <img width="75%" style="border-color:blue;" src="./doc-assets/react-query_devtool_detail.png" />
+  </kbd>
+</p>
+
 
 ## Trouble Shooting
 ### FRONTEND
